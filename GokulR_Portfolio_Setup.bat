@@ -1,109 +1,111 @@
 @echo off
-chcp 65001 >nul 2>&1
-title [GOKUL.R] Portfolio Auto-Installer
+setlocal EnableDelayedExpansion
+title [GOKUL.R] Portfolio Auto Launcher
 color 0A
 cls
 
-echo.
-echo  ================================================================
-echo   GOKUL.R - CYBERSECURITY PORTFOLIO INSTALLER
-echo  ================================================================
-echo.
-echo  This script will:
-echo    1. Create portfolio folder on your Desktop
-echo    2. Download the website code
-echo    3. Open VS Code with the project
-echo    4. Start localhost server + open Chrome
-echo.
-echo  ================================================================
-echo.
-pause
-
-set "PROJECT_DIR=%USERPROFILE%\Desktop\gokul-portfolio"
-
-:: ─────────────────────────────────────────────
-:: STEP 1: Create folder
-:: ─────────────────────────────────────────────
-echo.
-echo  [1/4] Creating project folder...
-if not exist "%PROJECT_DIR%" mkdir "%PROJECT_DIR%"
-echo  [+] Folder: %PROJECT_DIR%
+echo ================================================================
+echo    GOKUL.R - CYBERSECURITY PORTFOLIO AUTO LAUNCHER
+echo ================================================================
 echo.
 
-:: ─────────────────────────────────────────────
-:: STEP 2: Download HTML from GitHub
-:: ─────────────────────────────────────────────
-echo  [2/4] Downloading portfolio code from GitHub...
-powershell -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/gokularun201-creator/gokul-portfolio/main/index.html' -OutFile '%PROJECT_DIR%\index.html' -UseBasicParsing; Write-Host '  [+] index.html downloaded successfully!' } catch { Write-Host '  [!] Download failed. Trying fallback...' }"
+set "TARGET_DIR=%USERPROFILE%\Desktop\gokul-portfolio"
+set "LOCAL_HTML=%~dp0index.html"
 
-if not exist "%PROJECT_DIR%\index.html" (
-    echo  [!] GitHub download failed. Creating file locally...
-    powershell -Command "$html = @'
-<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Gokul.R | Cybersecurity Enthusiast</title><style>:root{--primary:#00ff41;--secondary:#00e5ff;--accent:#ff0055;--bg:#0a0a0f;--card:#0d1117;--text:#c9d1d9;--dim:#8b949e;--border:#30363d;--mono:'Courier New',monospace}*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}#matrix{position:fixed;top:0;left:0;width:100%%;height:100%%;z-index:0;opacity:.07;pointer-events:none}.navbar{position:fixed;top:0;width:100%%;z-index:1000;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,15,.85);backdrop-filter:blur(20px);border-bottom:1px solid transparent;transition:.3s}.navbar.scrolled{border-bottom-color:var(--primary);box-shadow:0 2px 20px rgba(0,255,65,.1)}.nav-logo{font-family:var(--mono);font-size:1.4rem;font-weight:700;color:var(--primary);text-decoration:none}.nav-logo::before{content:'> ';color:var(--secondary);animation:blink 1s infinite}@keyframes blink{0%%,100%%{opacity:1}50%%{opacity:0}}.nav-links{display:flex;list-style:none;gap:2rem}.nav-links a{color:var(--dim);text-decoration:none;font-family:var(--mono);font-size:.85rem;letter-spacing:1px;text-transform:uppercase;transition:.3s}.nav-links a:hover{color:var(--primary)}section{position:relative;z-index:2;padding:6rem 2rem}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;padding:2rem}.hero-content{text-align:center;max-width:900px}.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.2rem;border:1px solid var(--primary);border-radius:50px;font-family:var(--mono);font-size:.75rem;color:var(--primary);margin-bottom:2rem;background:rgba(0,255,65,.05);animation:fadeUp .6s ease forwards;opacity:0}.dot{width:6px;height:6px;background:var(--primary);border-radius:50%%;animation:pulse 2s infinite}@keyframes pulse{0%%,100%%{box-shadow:0 0 0 0 rgba(0,255,65,.7)}50%%{box-shadow:0 0 0 6px rgba(0,255,65,0)}}.hero-name{font-size:clamp(3rem,8vw,6rem);font-weight:800;line-height:1.1;margin-bottom:1rem;animation:fadeUp .6s ease .2s forwards;opacity:0}.hero-name .first{color:#fff;display:block}.hero-name .last{color:var(--primary);text-shadow:0 0 10px rgba(0,255,65,.5)}.glitch{position:relative}.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%%;overflow:hidden}.glitch::before{animation:g1 3s infinite linear alternate-reverse;clip-path:inset(0 0 80%% 0);color:var(--secondary);text-shadow:-2px 0 var(--accent)}.glitch::after{animation:g2 3s infinite linear alternate-reverse;clip-path:inset(80%% 0 0 0);color:var(--accent);text-shadow:2px 0 var(--secondary)}@keyframes g1{0%%,100%%{transform:translateX(0)}20%%{transform:translateX(-3px)}40%%{transform:translateX(3px)}60%%{transform:translateX(-1px)}80%%{transform:translateX(1px)}}@keyframes g2{0%%,100%%{transform:translateX(0)}20%%{transform:translateX(3px)}40%%{transform:translateX(-3px)}60%%{transform:translateX(1px)}80%%{transform:translateX(-1px)}}.typed{font-family:var(--mono);font-size:clamp(1rem,3vw,1.5rem);color:var(--secondary);margin-bottom:1.5rem;animation:fadeUp .6s ease .4s forwards;opacity:0}.typed span{border-right:2px solid var(--secondary);padding-right:4px;animation:cblink .8s infinite}@keyframes cblink{0%%,100%%{border-color:var(--secondary)}50%%{border-color:transparent}}.hero-desc{font-size:1.1rem;color:var(--dim);max-width:600px;margin:0 auto 2.5rem;animation:fadeUp .6s ease .6s forwards;opacity:0}.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .6s ease .8s forwards;opacity:0}.btn{padding:.8rem 2rem;border:none;border-radius:4px;font-family:var(--mono);font-weight:700;font-size:.9rem;cursor:pointer;text-decoration:none;transition:.3s;text-transform:uppercase;letter-spacing:1px}.btn-p{background:var(--primary);color:var(--bg)}.btn-o{background:transparent;color:var(--primary);border:1px solid var(--primary)}.btn:hover{transform:translateY(-2px);box-shadow:0 0 10px rgba(0,255,65,.5)}@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}.section-header{text-align:center;margin-bottom:4rem}.section-label{font-family:var(--mono);font-size:.8rem;color:var(--primary);letter-spacing:3px;text-transform:uppercase;margin-bottom:.5rem}.section-title{font-size:clamp(2rem,5vw,3rem);font-weight:800;color:#fff}.section-line{width:60px;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));margin:1rem auto 0;border-radius:2px}.about-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}.terminal{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}.term-head{display:flex;align-items:center;gap:8px;padding:.8rem 1rem;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border)}.term-dot{width:12px;height:12px;border-radius:50%%}.term-dot.r{background:#ff5f57}.term-dot.y{background:#febc2e}.term-dot.g{background:#28c840}.term-title{font-family:var(--mono);font-size:.75rem;color:var(--dim);margin-left:.5rem}.term-body{padding:1.5rem;font-family:var(--mono);font-size:.85rem;line-height:1.8}.tl{margin-bottom:.3rem}.tl .p{color:var(--primary)}.tl .c{color:var(--secondary)}.tl .o{color:var(--dim);padding-left:1rem}.tl .h{color:var(--primary)}.about-text h3{font-size:1.8rem;color:#fff;margin-bottom:1rem}.about-text h3 span{color:var(--primary)}.about-text p{color:var(--dim);margin-bottom:1rem}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}.stat{text-align:center;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:8px;transition:.3s}.stat:hover{border-color:var(--primary);box-shadow:0 0 10px rgba(0,255,65,.3)}.stat-n{font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--primary)}.stat-l{font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:.3rem}.skills-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem}.skill-cat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2rem;transition:.3s;position:relative;overflow:hidden}.skill-cat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));opacity:0;transition:.3s}.skill-cat:hover{border-color:var(--primary);transform:translateY(-5px);box-shadow:0 10px 40px rgba(0,255,65,.1)}.skill-cat:hover::before{opacity:1}.skill-cat .icon{font-size:2.5rem;margin-bottom:1rem}.skill-cat h3{font-family:var(--mono);font-size:1.1rem;color:var(--primary);margin-bottom:1.5rem}.sk-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}.sk-item span{font-size:.9rem}.sk-bar{flex:1;max-width:120px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin:0 .8rem}.sk-fill{height:100%%;border-radius:2px;background:linear-gradient(90deg,var(--primary),var(--secondary));width:0;transition:width 1.5s}.sk-pct{font-family:var(--mono);font-size:.75rem;color:var(--primary);min-width:35px;text-align:right}.proj-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem}.proj{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:.4s}.proj:hover{border-color:var(--primary);transform:translateY(-8px);box-shadow:0 20px 60px rgba(0,255,65,.1)}.proj-img{height:200px;background:linear-gradient(135deg,var(--card),rgba(0,255,65,.05));display:flex;align-items:center;justify-content:center;font-size:4rem;border-bottom:1px solid var(--border)}.proj-body{padding:1.5rem}.proj-tags{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}.tag{font-family:var(--mono);font-size:.65rem;padding:.2rem .6rem;border:1px solid var(--primary);border-radius:3px;color:var(--primary);text-transform:uppercase;letter-spacing:1px}.tag.cy{border-color:var(--secondary);color:var(--secondary)}.tag.rd{border-color:var(--accent);color:var(--accent)}.proj-body h3{font-size:1.2rem;color:#fff;margin-bottom:.5rem}.proj-body p{font-size:.9rem;color:var(--dim)}.contact-container{max-width:800px;margin:0 auto}.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem}.contact-info h3{font-size:1.5rem;color:#fff;margin-bottom:1rem}.contact-info p{color:var(--dim);margin-bottom:2rem}.c-item{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:8px;transition:.3s;text-decoration:none;color:inherit}.c-item:hover{border-color:var(--primary);background:var(--card)}.c-icon{font-size:1.5rem;width:45px;height:45px;display:flex;align-items:center;justify-content:center;background:rgba(0,255,65,.1);border-radius:8px}.c-item h4{font-family:var(--mono);font-size:.8rem;color:var(--primary);text-transform:uppercase;letter-spacing:1px}.c-item p{color:var(--text);font-size:.9rem;margin:0}.contact-form{display:flex;flex-direction:column;gap:1rem}.contact-form input,.contact-form textarea{width:100%%;padding:.8rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:.9rem;outline:none;transition:.3s}.contact-form textarea{min-height:120px;resize:vertical}.contact-form input:focus,.contact-form textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,255,65,.1)}.contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--dim)}.footer{position:relative;z-index:2;text-align:center;padding:3rem 2rem;border-top:1px solid var(--border)}.footer-links{display:flex;justify-content:center;gap:2rem;margin-bottom:1rem}.footer-links a{color:var(--dim);font-size:1.3rem;text-decoration:none;transition:.3s}.footer-links a:hover{color:var(--primary)}.footer p{font-family:var(--mono);font-size:.75rem;color:var(--dim)}.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.16,1,.3,1)}.reveal.visible{opacity:1;transform:translateY(0)}.particles{position:fixed;top:0;left:0;width:100%%;height:100%%;pointer-events:none;z-index:1}.particle{position:absolute;width:2px;height:2px;background:var(--primary);border-radius:50%%;opacity:0;animation:pf linear infinite}@keyframes pf{0%%{opacity:0;transform:translateY(100vh) scale(0)}10%%{opacity:.6}90%%{opacity:.6}100%%{opacity:0;transform:translateY(-100vh) scale(1)}}@media(max-width:768px){.about-grid,.contact-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.nav-links{display:none}}</style></head><body><canvas id=\"matrix\"></canvas><div class=\"particles\" id=\"particles\"></div><nav class=\"navbar\" id=\"navbar\"><a href=\"#\" class=\"nav-logo\">gokul.r</a><ul class=\"nav-links\"><li><a href=\"#about\">About</a></li><li><a href=\"#skills\">Skills</a></li><li><a href=\"#projects\">Projects</a></li><li><a href=\"#contact\">Contact</a></li></ul></nav><section class=\"hero\"><div class=\"hero-content\"><div class=\"hero-badge\"><span class=\"dot\"></span>AVAILABLE FOR OPPORTUNITIES</div><h1 class=\"hero-name\"><span class=\"first\">I'm </span><span class=\"last glitch\" data-text=\"Gokul.R\">Gokul.R</span></h1><div class=\"typed\"><span id=\"typedText\"></span></div><p class=\"hero-desc\">Passionate about breaking and building secure systems. I combine development skills with cybersecurity knowledge to create robust, secure solutions.</p><div class=\"hero-btns\"><a href=\"#projects\" class=\"btn btn-p\">View My Work</a><a href=\"#contact\" class=\"btn btn-o\">Get In Touch</a></div></div></section><section id=\"about\"><div class=\"section-header reveal\"><p class=\"section-label\">// who am i</p><h2 class=\"section-title\">About Me</h2><div class=\"section-line\"></div></div><div class=\"about-grid\"><div class=\"terminal reveal\"><div class=\"term-head\"><span class=\"term-dot r\"></span><span class=\"term-dot y\"></span><span class=\"term-dot g\"></span><span class=\"term-title\">gokul@kali:~</span></div><div class=\"term-body\"><div class=\"tl\"><span class=\"p\">gokul@kali:~$</span> <span class=\"c\">whoami</span></div><div class=\"tl\"><span class=\"o\">Cybersecurity Enthusiast &amp; Developer</span></div><div class=\"tl\"><span class=\"p\">gokul@kali:~$</span> <span class=\"c\">cat /etc/skills</span></div><div class=\"tl\"><span class=\"o\">Python | Java | Linux | Networking</span></div><div class=\"tl\"><span class=\"p\">gokul@kali:~$</span> <span class=\"c\">cat /etc/interests</span></div><div class=\"tl\"><span class=\"o\">Penetration Testing | Network Security</span></div><div class=\"tl\"><span class=\"o\">Ethical Hacking | Secure Development</span></div><div class=\"tl\"><span class=\"p\">gokul@kali:~$</span> <span class=\"c\">echo $STATUS</span></div><div class=\"tl\"><span class=\"o\"><span class=\"h\">Ready to hack the future!</span></span></div></div></div><div class=\"about-text reveal\"><h3>Hello, I'm <span>Gokul.R</span></h3><p>I'm a cybersecurity enthusiast and developer at the intersection of code and security. With Python, Java, Linux, and networking expertise, I build secure, resilient applications.</p><p>My passion lies in understanding how systems work and how they can be exploited to create better, more secure software.</p><div class=\"stats\"><div class=\"stat\"><div class=\"stat-n\" data-target=\"10\">0</div><div class=\"stat-l\">Projects</div></div><div class=\"stat\"><div class=\"stat-n\" data-target=\"5\">0</div><div class=\"stat-l\">Certifications</div></div><div class=\"stat\"><div class=\"stat-n\" data-target=\"500\">0</div><div class=\"stat-l\">Commits</div></div></div></div></div></section><section id=\"skills\"><div class=\"section-header reveal\"><p class=\"section-label\">// sudo apt-get skills</p><h2 class=\"section-title\">Technical Arsenal</h2><div class=\"section-line\"></div></div><div class=\"skills-grid\"><div class=\"skill-cat reveal\"><div class=\"icon\">💻</div><h3>// Programming</h3><div class=\"sk-item\"><span>Python</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"90\"></div></div><span class=\"sk-pct\">90%</span></div><div class=\"sk-item\"><span>Java</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"85\"></div></div><span class=\"sk-pct\">85%</span></div><div class=\"sk-item\"><span>Bash</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"80\"></div></div><span class=\"sk-pct\">80%</span></div><div class=\"sk-item\"><span>SQL</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"75\"></div></div><span class=\"sk-pct\">75%</span></div></div><div class=\"skill-cat reveal\"><div class=\"icon\">🔒</div><h3>// Cybersecurity</h3><div class=\"sk-item\"><span>Pen Testing</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"85\"></div></div><span class=\"sk-pct\">85%</span></div><div class=\"sk-item\"><span>Network Sec</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"88\"></div></div><span class=\"sk-pct\">88%</span></div><div class=\"sk-item\"><span>Vuln Assessment</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"82\"></div></div><span class=\"sk-pct\">82%</span></div><div class=\"sk-item\"><span>Ethical Hacking</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"80\"></div></div><span class=\"sk-pct\">80%</span></div></div><div class=\"skill-cat reveal\"><div class=\"icon\">🐧</div><h3>// Systems &amp; Networks</h3><div class=\"sk-item\"><span>Linux Admin</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"92\"></div></div><span class=\"sk-pct\">92%</span></div><div class=\"sk-item\"><span>TCP/IP</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"87\"></div></div><span class=\"sk-pct\">87%</span></div><div class=\"sk-item\"><span>Wireshark/Nmap</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"83\"></div></div><span class=\"sk-pct\">83%</span></div><div class=\"sk-item\"><span>Docker/VM</span><div class=\"sk-bar\"><div class=\"sk-fill\" data-w=\"78\"></div></div><span class=\"sk-pct\">78%</span></div></div></div></section><section id=\"projects\"><div class=\"section-header reveal\"><p class=\"section-label\">// git log --oneline</p><h2 class=\"section-title\">Featured Projects</h2><div class=\"section-line\"></div></div><div class=\"proj-grid\"><div class=\"proj reveal\"><div class=\"proj-img\">🛡️</div><div class=\"proj-body\"><div class=\"proj-tags\"><span class=\"tag\">Python</span><span class=\"tag cy\">Security</span></div><h3>Network Vulnerability Scanner</h3><p>Custom Python tool that scans networks for open ports and detects known vulnerabilities.</p></div></div><div class=\"proj reveal\"><div class=\"proj-img\">🔐</div><div class=\"proj-body\"><div class=\"proj-tags\"><span class=\"tag\">Java</span><span class=\"tag rd\">Encryption</span></div><h3>Secure File Vault</h3><p>Java-based encrypted file storage with AES-256 encryption and multi-factor auth.</p></div></div><div class=\"proj reveal\"><div class=\"proj-img\">📡</div><div class=\"proj-body\"><div class=\"proj-tags\"><span class=\"tag\">Python</span><span class=\"tag cy\">Networking</span></div><h3>Packet Analyzer</h3><p>Real-time network traffic analyzer with Scapy for packet capture and anomaly detection.</p></div></div><div class=\"proj reveal\"><div class=\"proj-img\">🤖</div><div class=\"proj-body\"><div class=\"proj-tags\"><span class=\"tag\">Python</span><span class=\"tag rd\">Linux</span></div><h3>System Hardening Toolkit</h3><p>Automated Linux security hardening scripts for firewalls and CIS benchmarks.</p></div></div></div></section><section id=\"contact\"><div class=\"section-header reveal\"><p class=\"section-label\">// ssh gokul@connect</p><h2 class=\"section-title\">Get In Touch</h2><div class=\"section-line\"></div></div><div class=\"contact-container\"><div class=\"contact-grid\"><div class=\"contact-info reveal\"><h3>Let's Connect</h3><p>Interested in working together or have a security challenge? Drop me a message.</p><a class=\"c-item\" href=\"mailto:gokularun201@gmail.com\"><div class=\"c-icon\">📧</div><div><h4>Email</h4><p>gokularun201@gmail.com</p></div></a><a class=\"c-item\" href=\"https://github.com/gokularun201-creator\" target=\"_blank\"><div class=\"c-icon\">🐙</div><div><h4>GitHub</h4><p>gokularun201-creator</p></div></a><a class=\"c-item\" href=\"https://linkedin.com/in/gokulr\" target=\"_blank\"><div class=\"c-icon\">💼</div><div><h4>LinkedIn</h4><p>Gokul R</p></div></a></div><form class=\"contact-form reveal\" onsubmit=\"handleSubmit(event)\"><input type=\"text\" placeholder=\"// Your Name\" required><input type=\"email\" placeholder=\"// Your Email\" required><input type=\"text\" placeholder=\"// Subject\"><textarea placeholder=\"// Your Message\" required></textarea><button type=\"submit\" class=\"btn btn-p\" style=\"width:100%\">Send Message</button></form></div></div></section><footer class=\"footer\"><div class=\"footer-links\"><a href=\"https://github.com/gokularun201-creator\" target=\"_blank\">🐙</a><a href=\"mailto:gokularun201@gmail.com\">📧</a><a href=\"https://linkedin.com/in/gokulr\" target=\"_blank\">💼</a></div><p>© 2026 Gokul.R | Built with ❤ and ☕</p></footer><script>const c=document.getElementById('matrix'),x=c.getContext('2d');function rc(){c.width=innerWidth;c.height=innerHeight}rc();addEventListener('resize',rc);const ch='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$',fs=14,cols=Math.floor(c.width/fs),dr=Array(cols).fill(1);function dm(){x.fillStyle='rgba(10,10,15,0.05)';x.fillRect(0,0,c.width,c.height);x.fillStyle='#00ff41';x.font=fs+'px monospace';for(let i=0;i<dr.length;i++){x.fillText(ch[Math.floor(Math.random()*ch.length)],i*fs,dr[i]*fs);if(dr[i]*fs>c.height&&Math.random()>.975)dr[i]=0;dr[i]++}}setInterval(dm,50);const titles=['Cybersecurity Enthusiast','Python Developer','Java Programmer','Linux Power User','Network Analyst','Ethical Hacker'];let ti=0,ci=0,del=false;const tt=document.getElementById('typedText');function type(){const t=titles[ti];if(del){tt.textContent=t.substring(0,ci-1);ci--}else{tt.textContent=t.substring(0,ci+1);ci++}let s=del?50:100;if(!del&&ci===t.length){s=2000;del=true}else if(del&&ci===0){del=false;ti=(ti+1)%titles.length;s=500}setTimeout(type,s)}type();addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',scrollY>50)});const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.reveal').forEach(e=>obs.observe(e));const sobs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.style.width=en.target.dataset.w+'%'}})},{threshold:.5});document.querySelectorAll('.sk-fill').forEach(b=>sobs.observe(b));const cobs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){const t=+en.target.dataset.target,inc=t/60;let cur=0;const tm=setInterval(()=>{cur+=inc;if(cur>=t){en.target.textContent=t+'+';clearInterval(tm)}else en.target.textContent=Math.ceil(cur)},30);cobs.unobserve(en.target)}})},{threshold:.5});document.querySelectorAll('.stat-n').forEach(c=>cobs.observe(c));const pc=document.getElementById('particles');for(let i=0;i<30;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=(Math.random()*10+10)+'s';p.style.animationDelay=Math.random()*10+'s';p.style.width=(Math.random()*3+1)+'px';p.style.height=p.style.width;if(Math.random()>.5)p.style.background='#00e5ff';pc.appendChild(p)}function handleSubmit(e){e.preventDefault();const b=e.target.querySelector('button');b.textContent='Message Sent!';b.style.background='var(--secondary)';setTimeout(()=>{b.textContent='Send Message';b.style.background='var(--primary)';e.target.reset()},3000)}document.querySelectorAll('a[href^=\"#\"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})})</script></body></html>
-'@
-$html | Out-File -FilePath '%PROJECT_DIR%\index.html' -Encoding UTF8
-Write-Host '  [+] File created locally!'"
+:: 1. Create directory
+if not exist "%TARGET_DIR%" (
+    echo [*] Creating portfolio directory at: %TARGET_DIR%
+    mkdir "%TARGET_DIR%"
 )
-echo  [+] Portfolio code ready!
-echo.
 
-:: ─────────────────────────────────────────────
-:: STEP 3: Open VS Code
-:: ─────────────────────────────────────────────
-echo  [3/4] Opening VS Code...
-where code >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    start "" code "%PROJECT_DIR%"
-    timeout /t 2 /nobreak >nul
-    start "" code "%PROJECT_DIR%\index.html"
-    echo  [+] VS Code opened!
+:: 2. Ensure index.html is present
+if exist "%LOCAL_HTML%" (
+    echo [*] Copying index.html to %TARGET_DIR%...
+    copy /Y "%LOCAL_HTML%" "%TARGET_DIR%\index.html" >nul
 ) else (
-    echo  [!] VS Code not found. Opening in Notepad...
-    start notepad "%PROJECT_DIR%\index.html"
+    echo [*] Downloading portfolio from GitHub...
+    powershell -NoProfile -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/gokularun201-creator/gokul-portfolio/main/index.html' -OutFile '%TARGET_DIR%\index.html' -UseBasicParsing"
+)
+
+if not exist "%TARGET_DIR%\index.html" (
+    echo [!] Error: index.html could not be loaded.
+    pause
+    exit /b 1
+)
+
+echo [+] Portfolio files ready!
+echo.
+
+:: 3. Find and launch VS Code
+echo [*] Launching Visual Studio Code...
+set "VSCODE_CMD="
+
+where code >nul 2>&1
+if !ERRORLEVEL! EQU 0 (
+    set "VSCODE_CMD=code"
+) else if exist "%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" (
+    set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd"
+) else if exist "%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe" (
+    set "VSCODE_CMD=%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe"
+) else if exist "%ProgramFiles%\Microsoft VS Code\bin\code.cmd" (
+    set "VSCODE_CMD=%ProgramFiles%\Microsoft VS Code\bin\code.cmd"
+) else if exist "%ProgramFiles%\Microsoft VS Code\Code.exe" (
+    set "VSCODE_CMD=%ProgramFiles%\Microsoft VS Code\Code.exe"
+)
+
+if defined VSCODE_CMD (
+    start "" "!VSCODE_CMD!" "%TARGET_DIR%" "%TARGET_DIR%\index.html"
+    echo [+] VS Code launched successfully with your project!
+) else (
+    echo [!] VS Code not detected. Opening with default editor...
+    start notepad "%TARGET_DIR%\index.html"
 )
 echo.
 
-:: ─────────────────────────────────────────────
-:: STEP 4: Start localhost + open browser
-:: ─────────────────────────────────────────────
-echo  [4/4] Starting localhost server...
+:: 4. Start Localhost Server and open in Chrome / Browser
+echo [*] Starting local HTTP server on port 8080...
+cd /d "%TARGET_DIR%"
 
 where python >nul 2>&1
-if %ERRORLEVEL% EQU 0 (
-    echo  [+] Starting Python server on http://localhost:8080
-    echo.
-    timeout /t 2 /nobreak >nul
+if !ERRORLEVEL! EQU 0 (
+    echo [+] Python detected! Launching server at http://localhost:8080
     start "" "http://localhost:8080"
-    echo  ================================================================
     echo.
-    echo   YOUR PORTFOLIO IS LIVE!
+    echo ================================================================
+    echo  SERVER IS RUNNING ON http://localhost:8080
+    echo  Press Ctrl+C in this window to stop the server when done.
+    echo ================================================================
     echo.
-    echo   VS Code:   OPEN with project files
-    echo   Browser:   http://localhost:8080
-    echo   GitHub:    https://gokularun201-creator.github.io/gokul-portfolio/
-    echo   Folder:    %PROJECT_DIR%
-    echo.
-    echo   Press Ctrl+C to stop the server.
-    echo  ================================================================
-    echo.
-    cd /d "%PROJECT_DIR%"
     python -m http.server 8080
-    goto :eof
+    goto :done
 )
 
-:: No Python - just open HTML directly
-echo  [!] Python not found. Opening HTML directly...
-start "" "%PROJECT_DIR%\index.html"
+where py >nul 2>&1
+if !ERRORLEVEL! EQU 0 (
+    echo [+] Python launcher detected! Launching server at http://localhost:8080
+    start "" "http://localhost:8080"
+    echo.
+    echo ================================================================
+    echo  SERVER IS RUNNING ON http://localhost:8080
+    echo  Press Ctrl+C in this window to stop the server when done.
+    echo ================================================================
+    echo.
+    py -m http.server 8080
+    goto :done
+)
+
+:: If Python is not installed, use PowerShell embedded lightweight webserver!
+echo [!] Python not found. Starting lightweight PowerShell HTTP server...
+start "" "http://localhost:8080"
 echo.
-echo  ================================================================
+echo ================================================================
+echo  SERVER IS RUNNING ON http://localhost:8080
+echo  Press Ctrl+C in this window to stop the server when done.
+echo ================================================================
 echo.
-echo   YOUR PORTFOLIO IS READY!
-echo.
-echo   Browser:   Opened index.html directly
-echo   GitHub:    https://gokularun201-creator.github.io/gokul-portfolio/
-echo   Folder:    %PROJECT_DIR%
-echo.
-echo   TIP: Install Python for localhost server
-echo  ================================================================
-echo.
+
+powershell -NoProfile -Command ^
+    "$listener = New-Object System.Net.HttpListener; $listener.Prefixes.Add('http://localhost:8080/'); $listener.Start(); Write-Host '[+] Server running on http://localhost:8080/ (PowerShell)'; while ($listener.IsListening) { $ctx = $listener.GetContext(); $req = $ctx.Request; $res = $ctx.Response; $path = (Get-Location).Path + ($req.Url.LocalPath.Replace('/', '\')); if (Test-Path -PathType Leaf $path) { $bytes = [System.IO.File]::ReadAllBytes($path); $res.ContentLength64 = $bytes.Length; if ($path.EndsWith('.html')) { $res.ContentType = 'text/html' } elseif ($path.EndsWith('.css')) { $res.ContentType = 'text/css' } elseif ($path.EndsWith('.js')) { $res.ContentType = 'application/javascript' }; $res.OutputStream.Write($bytes, 0, $bytes.Length); } else { $res.StatusCode = 404; $buf = [System.Text.Encoding]::UTF8.GetBytes('File not found'); $res.OutputStream.Write($buf, 0, $buf.Length); } $res.OutputStream.Close(); }"
+
+:done
 pause
